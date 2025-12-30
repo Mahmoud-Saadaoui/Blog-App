@@ -3,7 +3,7 @@ import "./sidebar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
-import Loader from "../loader/Loader";
+import CategorySkeleton from "../skeleton/CategorySkeleton";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const Sidebar = () => {
     return (
       <div className="sidebar">
         <h5 className="sidebar-title">CATEGORIES</h5>
-        <Loader />
+        <CategorySkeleton />
       </div>
     );
   }

@@ -5,12 +5,13 @@ import Pagination from "../../components/pagination/Pagination";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts, getPostsCount } from "../../redux/apiCalls/postApiCall";
+import Loader from "../../components/loader/Loader";
 
 const POST_PER_PAGE = 3;
 
 const PostsPage = () => {
   const dispatch = useDispatch();
-  const { postsCount, posts } = useSelector(state => state.post);
+  const { postsCount, posts, loading } = useSelector(state => state.post);
 
   const [currentPage, setCurrentPage] = useState(1);
   const pages = Math.ceil(postsCount / POST_PER_PAGE);
@@ -27,7 +28,7 @@ const PostsPage = () => {
   return (
     <>
       <section className="posts-page">
-        <PostList posts={posts} />
+        {loading ? <Loader /> : <PostList posts={posts} />}
         <Sidebar />
       </section>
       <Pagination
