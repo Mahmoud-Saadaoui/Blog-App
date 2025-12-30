@@ -4,7 +4,8 @@
   "description": "backend of the application",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "author": "Mahmoud Saadaoui",
   "license": "ISC",
