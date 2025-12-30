@@ -9,9 +9,9 @@ module.exports = async (userEmail, subject, htmlTemplate) => {
         pass: process.env.EMAIL_PASSWORD,
       },
       // ⛔ Don't use it in production
-      tls: {
-        rejectUnauthorized: false, 
-      },
+      // tls: {
+      //   rejectUnauthorized: false, 
+      // },
     });
 
     const mailOptions = {
