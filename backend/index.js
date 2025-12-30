@@ -29,7 +29,7 @@ app.use(xss());
 // Rate Limiting
 app.use(rateLimiting({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max:200,
+  max: 200,
 }));
 
 // Cors Policy
@@ -38,7 +38,7 @@ app.use(cors({
 }));
 
 // Test backend route
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("✅ Server is running smoothly! 🌟 🚀");
 });
 
@@ -48,7 +48,7 @@ app.use("/api/users", require("./routes/usersRoute"));
 app.use("/api/posts", require("./routes/postsRoute"));
 app.use("/api/comments", require("./routes/commentsRoute"));
 app.use("/api/categories", require("./routes/categoriesRoute"));
-app.use("/api/password",require("./routes/passwordRoute"));
+app.use("/api/password", require("./routes/passwordRoute"));
 
 // Error Handler Middleware
 app.use(notFound);

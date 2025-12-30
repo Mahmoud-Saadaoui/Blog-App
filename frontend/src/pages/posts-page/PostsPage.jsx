@@ -2,9 +2,9 @@ import "./posts-page.css";
 import PostList from "../../components/posts/PostList";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Pagination from "../../components/pagination/Pagination";
-import { useEffect , useState} from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts,getPostsCount } from "../../redux/apiCalls/postApiCall";
+import { fetchPosts, getPostsCount } from "../../redux/apiCalls/postApiCall";
 
 const POST_PER_PAGE = 3;
 
@@ -30,10 +30,10 @@ const PostsPage = () => {
         <PostList posts={posts} />
         <Sidebar />
       </section>
-      <Pagination 
-       pages={pages} 
-       currentPage={currentPage}
-       setCurrentPage={setCurrentPage}
+      <Pagination
+        pages={pages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
     </>
   );
