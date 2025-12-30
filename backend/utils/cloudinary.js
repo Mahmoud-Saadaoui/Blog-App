@@ -6,18 +6,22 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Cloudinary Upload Image
-const cloudinaryUploadImage = async (fileToUpload) => {
-  try {
-    const data = await cloudinary.uploader.upload(fileToUpload, {
+
+// Upload single image to Cloudinary from buffers (Multer)
+const uploadSingleImageToCloudinary = async (image, folder = "EShopty") => {
+  const base64 = image.buffer.toString("base64");
+  const mimeType = image.mimetype;
+
+  const uploadResponse = await cloudinary.uploader.upload(
+    `data:${mimeType};base64,${base64}`,
+    {
       folder: "Blog App",
-      resource_type: "auto",
-    });
-    return data;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Internal Server Error (cloudinary)");
-  }
+      secure: true,
+      rejectUnauthorized: false,
+    }
+  );
+
+  return uploadResponse;
 };
 
 // Cloudinary Remove Image
@@ -43,7 +47,7 @@ const cloudinaryRemoveMultipleImage = async (publicIds) => {
 };
 
 module.exports = {
-  cloudinaryUploadImage,
+  uploadSingleImageToCloudinary,
   cloudinaryRemoveImage,
   cloudinaryRemoveMultipleImage,
 };

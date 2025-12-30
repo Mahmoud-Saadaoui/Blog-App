@@ -6,7 +6,8 @@ const fs = require("fs");
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
-  cloudinaryRemoveMultipleImage
+  cloudinaryRemoveMultipleImage,
+  uploadSingleImageToCloudinary
 } = require("../utils/cloudinary");
 const { Comment } = require("../models/Comment");
 const { Post } = require("../models/Post");
@@ -30,8 +31,8 @@ module.exports.getAllUsersCtrl = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 module.exports.getUserProfileCtrl = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
-   .select("-password")
-   .populate("posts");
+    .select("-password")
+    .populate("posts");
 
   if (!user) {
     return res.status(404).json({ message: "user not found" });
@@ -68,7 +69,7 @@ module.exports.updateUserProfileCtrl = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).select("-password")
-  .populate("posts");
+    .populate("posts");
 
   res.status(200).json(updatedUser);
 });
@@ -92,17 +93,15 @@ module.exports.getUsersCountCtrl = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 module.exports.profilePhotoUploadCtrl = asyncHandler(async (req, res) => {
   // 1. Validation
-  if (!req.file) {
-    return res.status(400).json({ message: "no file provided" });
+  const image = req.file
+  if (!image) {
+    return res.status(400).json({ message: "No image provided" });
   }
 
-  // 2. Get the path to the image
-  const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
+  // 2. Upload to cloudinary
+  const result = await uploadSingleImageToCloudinary(image);
 
-  // 3. Upload to cloudinary
-  const result = await cloudinaryUploadImage(imagePath);
-
-  // 4. Get the user from DB
+  // 3. Get the user from DB
   const user = await User.findById(req.user.id);
 
   // 5. Delete the old profile photo if exist
@@ -147,15 +146,15 @@ module.exports.deleteUserProfileCtrl = asyncHandler(async (req, res) => {
   const publicIds = posts?.map((post) => post.image.publicId);
 
   // 4. Delete all posts image from cloudinary that belong to this user
-  if(publicIds?.length > 0) {
+  if (publicIds?.length > 0) {
     await cloudinaryRemoveMultipleImage(publicIds);
   }
 
   // 5. Delete the profile picture from cloudinary
-  if(user.profilePhoto.publicId !== null) {
+  if (user.profilePhoto.publicId !== null) {
     await cloudinaryRemoveImage(user.profilePhoto.publicId);
   }
-  
+
   // 6. Delete user posts & comments
   await Post.deleteMany({ user: user._id });
   await Comment.deleteMany({ user: user._id });

@@ -9,6 +9,7 @@ const {
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
+  uploadSingleImageToCloudinary,
 } = require("../utils/cloudinary");
 const { Comment } = require("../models/Comment");
 
@@ -20,8 +21,9 @@ const { Comment } = require("../models/Comment");
  ------------------------------------------------*/
 module.exports.createPostCtrl = asyncHandler(async (req, res) => {
   // 1. Validation for image
-  if (!req.file) {
-    return res.status(400).json({ message: "no image provided" });
+  const image = req.file
+  if (!image) {
+    return res.status(400).json({ message: "No image provided" });
   }
 
   // 2. Validation for data
@@ -31,8 +33,7 @@ module.exports.createPostCtrl = asyncHandler(async (req, res) => {
   }
 
   // 3. Upload photo
-  const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
-  const result = await cloudinaryUploadImage(imagePath);
+  const result = await uploadSingleImageToCloudinary(image);
 
   // 4. Create new post and save it to DB
   const post = await Post.create({
@@ -90,9 +91,9 @@ module.exports.getAllPostsCtrl = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 module.exports.getSinglePostCtrl = asyncHandler(async (req, res) => {
   const post = await Post.findById(req.params.id)
-  .populate("user", ["-password"])
-  .populate("comments");
-  
+    .populate("user", ["-password"])
+    .populate("comments");
+
   if (!post) {
     return res.status(404).json({ message: "post not found" });
   }
@@ -177,7 +178,7 @@ module.exports.updatePostCtrl = asyncHandler(async (req, res) => {
     },
     { new: true }
   ).populate("user", ["-password"])
-  .populate("comments");
+    .populate("comments");
 
   // 5. Send response to the client
   res.status(200).json(updatedPost);
@@ -191,8 +192,9 @@ module.exports.updatePostCtrl = asyncHandler(async (req, res) => {
  ------------------------------------------------*/
 module.exports.updatePostImageCtrl = asyncHandler(async (req, res) => {
   // 1. Validation
-  if (!req.file) {
-    return res.status(400).json({ message: "no image provided" });
+  const image = req.file
+  if (!image) {
+    return res.status(400).json({ message: "No image provided" });
   }
 
   // 2. Get the post from DB and check if post exist
@@ -212,8 +214,7 @@ module.exports.updatePostImageCtrl = asyncHandler(async (req, res) => {
   await cloudinaryRemoveImage(post.image.publicId);
 
   // 5. Upload new photo
-  const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
-  const result = await cloudinaryUploadImage(imagePath);
+  const result = await uploadSingleImageToCloudinary(image);
 
   // 6. Update the image field in the db
   const updatedPost = await Post.findByIdAndUpdate(
