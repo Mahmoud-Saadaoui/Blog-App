@@ -6,17 +6,20 @@ import { toast } from "react-toastify";
 export function fetchCategories() {
   return async (dispatch) => {
     try {
+      dispatch(categoryActions.setLoading());
       const { data } = await request.get("/api/categories");
       dispatch(categoryActions.setCategories(data));
+      dispatch(categoryActions.clearLoading());
     } catch (error) {
       toast.error(error.response.data.message);
+      dispatch(categoryActions.clearLoading());
     }
   };
 }
 
 // Create Category
 export function createCategory(newCategory) {
-  return async (dispatch,getState) => {
+  return async (dispatch, getState) => {
     try {
       const { data } = await request.post("/api/categories", newCategory, {
         headers: {
@@ -33,7 +36,7 @@ export function createCategory(newCategory) {
 
 // Delete Category
 export function deleteCategory(categoryId) {
-  return async (dispatch,getState) => {
+  return async (dispatch, getState) => {
     try {
       const { data } = await request.delete(`/api/categories/${categoryId}`, {
         headers: {

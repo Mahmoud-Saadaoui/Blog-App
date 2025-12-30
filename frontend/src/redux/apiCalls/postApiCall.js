@@ -6,10 +6,13 @@ import { toast } from "react-toastify";
 export function fetchPosts(pageNumber) {
   return async (dispatch) => {
     try {
+      dispatch(postActions.setLoading());
       const { data } = await request.get(`/api/posts?pageNumber=${pageNumber}`);
       dispatch(postActions.setPosts(data));
+      dispatch(postActions.clearLoading());
     } catch (error) {
       toast.error(error.response.data.message);
+      dispatch(postActions.clearLoading());
     }
   };
 }
@@ -30,10 +33,13 @@ export function getPostsCount() {
 export function fetchPostsBasedOnCategory(category) {
   return async (dispatch) => {
     try {
+      dispatch(postActions.setLoading());
       const { data } = await request.get(`/api/posts?category=${category}`);
       dispatch(postActions.setPostsCate(data));
+      dispatch(postActions.clearLoading());
     } catch (error) {
       toast.error(error.response.data.message);
+      dispatch(postActions.clearLoading());
     }
   };
 }
@@ -63,17 +69,20 @@ export function createPost(newPost) {
 export function fetchSinglePost(postId) {
   return async (dispatch) => {
     try {
+      dispatch(postActions.setLoading());
       const { data } = await request.get(`/api/posts/${postId}`);
       dispatch(postActions.setPost(data));
+      dispatch(postActions.clearLoading());
     } catch (error) {
       toast.error(error.response.data.message);
+      dispatch(postActions.clearLoading());
     }
   };
 }
 
 // Toggle Like Post
 export function toggleLikePost(postId) {
-  return async (dispatch,getState) => {
+  return async (dispatch, getState) => {
     try {
       const { data } = await request.put(`/api/posts/like/${postId}`, {}, {
         headers: {
@@ -88,13 +97,13 @@ export function toggleLikePost(postId) {
 }
 
 // Update Post Image
-export function updatePostImage(newImage,postId) {
-  return async (dispatch,getState) => {
+export function updatePostImage(newImage, postId) {
+  return async (dispatch, getState) => {
     try {
       await request.put(`/api/posts/update-image/${postId}`, newImage, {
         headers: {
           Authorization: "Bearer " + getState().auth.user.token,
-          "Content-Type":"multipart/form-data",
+          "Content-Type": "multipart/form-data",
         }
       });
       toast.success("New post image uploaded successfully");
@@ -105,8 +114,8 @@ export function updatePostImage(newImage,postId) {
 }
 
 // Update Post
-export function updatePost(newPost,postId) {
-  return async (dispatch,getState) => {
+export function updatePost(newPost, postId) {
+  return async (dispatch, getState) => {
     try {
       const { data } = await request.put(`/api/posts/${postId}`, newPost, {
         headers: {
@@ -122,7 +131,7 @@ export function updatePost(newPost,postId) {
 
 // Delete Post
 export function deletePost(postId) {
-  return async (dispatch,getState) => {
+  return async (dispatch, getState) => {
     try {
       const { data } = await request.delete(`/api/posts/${postId}`, {
         headers: {
@@ -141,10 +150,13 @@ export function deletePost(postId) {
 export function getAllPosts() {
   return async (dispatch) => {
     try {
+      dispatch(postActions.setLoading());
       const { data } = await request.get(`/api/posts`);
       dispatch(postActions.setPosts(data));
+      dispatch(postActions.clearLoading());
     } catch (error) {
       toast.error(error.response.data.message);
+      dispatch(postActions.clearLoading());
     }
   };
 }

@@ -3,14 +3,24 @@ import "./sidebar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
+import Loader from "../loader/Loader";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
-  const { categories } = useSelector((state) => state.category);
+  const { categories, loading } = useSelector((state) => state.category);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
+
+  if (loading) {
+    return (
+      <div className="sidebar">
+        <h5 className="sidebar-title">CATEGORIES</h5>
+        <Loader />
+      </div>
+    );
+  }
 
   if (categories?.length === 0) {
     return (

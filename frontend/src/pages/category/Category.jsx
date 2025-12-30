@@ -4,10 +4,11 @@ import PostList from "../../components/posts/PostList";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPostsBasedOnCategory } from "../../redux/apiCalls/postApiCall";
+import Loader from "../../components/loader/Loader";
 
 const Category = () => {
   const dispatch = useDispatch();
-  const { postsCate } = useSelector((state) => state.post);
+  const { postsCate, loading } = useSelector((state) => state.post);
 
   const { category } = useParams();
 
@@ -15,6 +16,8 @@ const Category = () => {
     dispatch(fetchPostsBasedOnCategory(category));
     window.scrollTo(0, 0);
   }, [category, dispatch]);
+
+  if (loading) return <Loader />;
 
   return (
     <section className="category">
