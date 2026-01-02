@@ -35,7 +35,7 @@ app.use(rateLimiting({
 // Cors Policy
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://m-blogapp.netlify.app/",
+  "https://m-blogapp.netlify.app",
 ];
 app.use(cors({
   origin: allowedOrigins,
