@@ -2,10 +2,12 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { logoutUser } from "../../redux/apiCalls/authApiCall";
+import { useNavigate } from "react-router-dom";
 
 const HeaderRight = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const [dropdown, setDropdown] = useState(false);
 
@@ -13,6 +15,7 @@ const HeaderRight = () => {
   const logoutHandler = () => {
     setDropdown(false);
     dispatch(logoutUser());
+    navigate("/");
   }
 
   return (
