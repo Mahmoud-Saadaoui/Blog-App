@@ -33,8 +33,13 @@ app.use(rateLimiting({
 }));
 
 // Cors Policy
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://m-blogapp.netlify.app/",
+];
 app.use(cors({
-  origin: "http://localhost:3000"
+  origin: allowedOrigins,
+  credentials: true,
 }));
 
 // Test backend route
